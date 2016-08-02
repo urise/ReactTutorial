@@ -1,4 +1,6 @@
-﻿var data = [
+﻿var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+var data = [
   { Author: "Daniel Lo Nigro", Text: "Hello ReactJS.NET World!" },
   { Author: "Pete Hunt", Text: "This is one comment" },
   { Author: "Jordan Walke", Text: "This is *another* comment" }
@@ -7,14 +9,14 @@
 var CommentForm = React.createClass({
     handleSubmit: function (e) {
         e.preventDefault();
-        var author = this.refs.author.getDOMNode().value.trim();
-        var text = this.refs.text.getDOMNode().value.trim();
+        var author = ReactDOM.findDOMNode(this.refs.author).value.trim();
+        var text = ReactDOM.findDOMNode(this.refs.text).value.trim();
         if (!text || !author) {
             return;
         }
         this.props.onCommentSubmit({ Author: author, Text: text });
-        this.refs.author.getDOMNode().value = '';
-        this.refs.text.getDOMNode().value = '';
+        ReactDOM.findDOMNode(this.refs.author).value = '';
+        ReactDOM.findDOMNode(this.refs.text).value = '';
         return;
     },
     render: function () {
@@ -23,6 +25,7 @@ var CommentForm = React.createClass({
             <input type="text" placeholder="Your name" ref="author" />
             <input type="text" placeholder="Say something..." ref="text" />
             <input type="submit" value="Post" />
+            <button onclick={this.handleSubmit}>Another Post</button>
           </form>
     );
     }
@@ -91,11 +94,13 @@ var CommentBox = React.createClass({
     },
     render: function () {
         return (
+      <ReactCSSTransitionGroup transitionName="example" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
       <div className="commentBox">
         <h1>Comments</h1>
         <CommentList data={this.state.data} />
         <CommentForm onCommentSubmit={this.handleCommentSubmit} />
       </div>
+      </ReactCSSTransitionGroup>
     );
     }
 });
